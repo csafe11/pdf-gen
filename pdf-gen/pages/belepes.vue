@@ -37,6 +37,8 @@ const email = ref('')
 const password = ref('')
 const error = ref('')
 
+const { fetchAuth } = useAuth()
+
 const submitForm = async () => {
   error.value = ''
   try {
@@ -56,7 +58,8 @@ const submitForm = async () => {
     const cookie = useCookie('auth_user')
     console.log('auth_user cookie:', cookie.value)
 
-    // Próbáljunk azonnal átirányítani
+    useState('authUser').value = result.user
+    await fetchAuth()
     await navigateTo('/letoltes', { replace: true })
   } catch (err) {
     console.error('❌ Hálózati hiba:', err)
@@ -64,11 +67,6 @@ const submitForm = async () => {
   }
 }
 
-if (result.success) {
-  const state = useState('authUser', () => null)
-  state.value = result.user  // Ezzel kitöltjük kliensoldali állapotot is
-  await navigateTo('/letoltes', { replace: true })
-}
 
 </script>
 
